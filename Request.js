@@ -1,4 +1,3 @@
-// Inside the request callback
 const responseObj = {
     totalBlogs,
     longestBlogTitle: longestTitleBlog.title,

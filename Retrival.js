@@ -5,7 +5,7 @@ const _ = require('lodash'); // Import Lodash
 
 app.get('/api/blog-stats', (req, res) => {
   // Make a GET request to fetch the blog data from a third-party API
-  request('https://api.example.com/blog-data', (error, response, body) => {
+  request(' https://intent-kit-16.hasura.app/api/rest/blogs', (error, response, body) => {
     if (error) {
       return res.status(500).json({ error: 'Error fetching blog data' });
     }

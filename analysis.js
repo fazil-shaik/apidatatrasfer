@@ -1,6 +1,5 @@
 const _ = require('lodash');
 
-// Inside the request callback
 const blogData = JSON.parse(body);
 
 const totalBlogs = blogData.length;
