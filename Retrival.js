@@ -1,51 +1,25 @@
 const express = require('express');
-const request = require('request'); // You can use 'request' library for making HTTP requests
+const axios = require('axios');
 const app = express();
-const _ = require('lodash'); // Import Lodash
 
-app.get('/api/blog-stats', (req, res) => {
-  // Make a GET request to fetch the blog data from a third-party API
-  request(' https://intent-kit-16.hasura.app/api/rest/blogs', (error, response, body) => {
-    if (error) {
-      return res.status(500).json({ error: 'Error fetching blog data' });
-    }
+app.get('/api/blog-stats', async (req, res) => {
+  try {
+    const response = await axios.get('https://intent-kit-16.hasura.app/api/rest/blogs', {
+      headers: {
+        'x-hasura-admin-secret': '32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6',
+      },
+    });
 
-    const blogData = JSON.parse(body);
+    const blogData = response.data;
 
-    // Data Analysis
-    const totalBlogs = blogData.length;
-    const longestTitleBlog = _.maxBy(blogData, (blog) => blog.title.length);
-    const privacyBlogs = _.filter(blogData, (blog) => blog.title.toLowerCase().includes('privacy'));
-    const uniqueBlogTitles = _.uniqBy(blogData, 'title');
+    // Data Analysis and Response logic will go here
 
-    // Response
-    const responseObj = {
-      totalBlogs,
-      longestBlogTitle: longestTitleBlog.title,
-      privacyBlogsCount: privacyBlogs.length,
-      uniqueBlogTitles: uniqueBlogTitles.map((blog) => blog.title),
-    };
-
-    res.json(responseObj);
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-// Blog Search Endpoint
-app.get('/api/blog-search', (req, res) => {
-  const query = req.query.query.toLowerCase();
-
-  const searchResults = _.filter(blogData, (blog) => blog.title.toLowerCase().includes(query));
-
-  res.json(searchResults);
-});
-
-// Error Handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
-
-// Start your Express server
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });

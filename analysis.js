@@ -1,18 +1,15 @@
-const _ = require('lodash');
-
-const blogData = JSON.parse(body);
-
+// Inside the try block of /api/blog-stats route
 const totalBlogs = blogData.length;
-const longestTitleBlog = _.maxBy(blogData, (blog) => blog.title.length);
-const privacyBlogs = _.filter(blogData, (blog) => blog.title.toLowerCase().includes('privacy'));
-const uniqueBlogTitles = _.uniqBy(blogData, 'title');
+const longestTitleBlog = _.maxBy(blogData, 'title');
+const privacyBlogs = blogData.filter(blog => blog.title.toLowerCase().includes('privacy'));
+const uniqueTitles = _.uniqBy(blogData, 'title');
 
-// Response
-const responseObj = {
+// Prepare the response object
+const responseData = {
   totalBlogs,
-  longestBlogTitle: longestTitleBlog.title,
-  privacyBlogsCount: privacyBlogs.length,
-  uniqueBlogTitles: uniqueBlogTitles.map((blog) => blog.title),
+  longestBlogTitle: longestTitleBlog ? longestTitleBlog.title : null,
+  privacyBlogCount: privacyBlogs.length,
+  uniqueBlogTitles: uniqueTitles.map(blog => blog.title),
 };
 
-res.json(responseObj);
+res.json(responseData);
